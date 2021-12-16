@@ -1,0 +1,45 @@
+---
+
+# This playbook will automate the pod creation and deployment for Zookeeper, Kafka brokers #1-5, CouchDB, and the Consumer
+
+- hosts: ChameleonVM2
+  remote_user: cc
+  gather_facts: no
+  collections:
+    - openstack.cloud
+    - community.kubernetes
+  tasks:
+  - name: Create CouchDB Service
+    community.kubernetes.k8s:
+      namespace: default
+      state: present
+      src: /home/cc/Group1CloudComputing/FinalProject/dockerfiles/couchdb-svc.yaml
+  - name: Create CouchDB Deployment
+    community.kubernetes.k8s:
+      namespace: default
+      state: present
+      src: /home/cc/Group1CloudComputing/FinalProject/dockerfiles/couchdb-deployment.yaml
+
+  - name: Pause after starting CouchDB
+    pause:
+      seconds: 30
+
+  # - name: Create ng-stress Service
+  #   community.kubernetes.k8s:
+  #     namespace: default
+  #     state: present
+  #     src: /home/cc/dockerfiles/stressng-deployment.yaml
+
+  - name: Create pyzmq Service
+    community.kubernetes.k8s:
+      namespace: default
+      state: present
+      src: /home/cc/Group1CloudComputing/FinalProject/dockerfiles/pyzmq-svc.yaml
+  - name: Create pyzmq Deployment
+    community.kubernetes.k8s:
+      namespace: default
+      state: present
+      src: /home/cc/Group1CloudComputing/FinalProject/dockerfiles/pyzmq-deployment.yaml  
+  
+  
+...

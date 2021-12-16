@@ -1,0 +1,18 @@
+---
+# .yaml file for pyzmq server-side service
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: pyzmq-svc
+spec:
+  type: NodePort
+  selector:
+    app: pyzmq-svc-app
+  ports:
+    - name: pyzmq-svc-port
+      protocol: TCP
+      port: 5556
+      targetPort: 5556
+      nodePort: 30002
+...

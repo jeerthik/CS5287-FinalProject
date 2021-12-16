@@ -1,0 +1,38 @@
+---
+# Join all the worker VMs (4 & 5) to the K8s cluster
+
+- hosts: ChameleonWorkers
+  remote_user: cc
+  gather_facts: no
+  collections:
+    - openstack.cloud
+
+  tasks:
+    - name: add docker group
+      become: yes
+      ignore_errors: yes
+      ansible.builtin.command: groupadd docker
+    - name: add user to docker group
+      become: yes
+      ignore_errors: yes
+      ansible.builtin.command: usermod -aG docker ${USER}
+      
+    - name: disable swap for K8s
+      become: yes
+      ansible.builtin.command: swapoff -a
+
+    - name: daemon reload
+      become: yes
+      ansible.builtin.command: systemctl daemon-reload
+    - name: restart docker
+      become: yes
+      ansible.builtin.command: systemctl restart docker
+
+    - name: Copy join command to worker VM
+      copy:
+        src: /home/vagrant/VagrantAnsibleFiles/FinalProject/join-command
+        dest: /home/cc/join-command.sh
+
+    - name: Join the node to the K8s cluster
+      become: yes
+      command: sh /home/cc/join-command.sh

@@ -1,0 +1,129 @@
+---
+# CS 5287: Principles of Cloud Computing
+# Group 1: Jeerthi Kannan, Dawson Lee, Rooney Gao
+# This playbook creates four instances on the Chameleon Cloud and assigns known floating IPs
+
+# add keypairs
+  - name: create keypair for VM2 (k8s master)
+    openstack.cloud.keypair:
+      cloud: openstack
+      state: present
+      name: DawsonChameleon
+      public_key: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCWN0JkFhcW1SbApvUeHkWeHKEb1NvOzFCH55gKasGKftXKy5s67Ot8UpjKwnIXsoX4qbdJtV+9om2tncUUrgJcdhtqYYvJ+kY01QbIiV0/Wt6j1NEk6Bj8sdKrQACNnZfFk7o/MopZB0wDgE/c/KSfP+EgyCo20hExzDcVCLWVik9GKaUJPEw0+UjG7vDHGHwRqARiXS0so/oqaclBtgEYtpWqgRADKwQdDksqyD3i0e+PQoMhKDFo9TrW2fgehNkdQ56E0Jnaf3mR0bS6DmtA2uWKyWVd6xl+nZT1HmL42LRNIfXJCfSFTPQhsChmGT98CwNf6pGhs9QRfrdTU6g1 Generated-by-Nova
+
+  # - name: create keypair for VM3 (k8s worker)
+  #   openstack.cloud.keypair:
+  #     cloud: openstack
+  #     state: present
+  #     name: test
+  #     public_key: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDM6LigzOudHZ5/Xtn6lAH0DhrNbFis+C+DvB+i6dNU4T/0JIGeS58E23mzgs8/qw4AzTvT1KAxgEkP+c+j0Y72cpGgzESqiTCQ+eZ+wBwziRT1AIsz0KtTB4FxFz5cbTvozDYuUHqYpcvV8zOo2bblffqTCpvid9S5cVq1eFqfBnioJ6kUWca1sW15O5Zd7AUF8HztRri6FW0acVYk4UGLB2YyX1F7Xls2TmEf4vq7XcfX7/UOoFOhVPNzpPXQiaJS4lwazZzmkwYASwP0t/KZG9QyieNIzyt1UcUw8Zgw8CTj5595dSxppDPobNMAdSwrKMaR6LqJooUcye84tQHT Generated-by-Nova
+
+  - name: create keypair for VM4 (k8s worker)
+    openstack.cloud.keypair:
+      cloud: openstack
+      state: present
+      name: DawsonChameleon
+      public_key: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCWN0JkFhcW1SbApvUeHkWeHKEb1NvOzFCH55gKasGKftXKy5s67Ot8UpjKwnIXsoX4qbdJtV+9om2tncUUrgJcdhtqYYvJ+kY01QbIiV0/Wt6j1NEk6Bj8sdKrQACNnZfFk7o/MopZB0wDgE/c/KSfP+EgyCo20hExzDcVCLWVik9GKaUJPEw0+UjG7vDHGHwRqARiXS0so/oqaclBtgEYtpWqgRADKwQdDksqyD3i0e+PQoMhKDFo9TrW2fgehNkdQ56E0Jnaf3mR0bS6DmtA2uWKyWVd6xl+nZT1HmL42LRNIfXJCfSFTPQhsChmGT98CwNf6pGhs9QRfrdTU6g1 Generated-by-Nova
+
+  - name: create keypair for VM5 (k8s worker)
+    openstack.cloud.keypair:
+      cloud: openstack
+      state: present
+      name: DawsonChameleon
+      public_key: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCWN0JkFhcW1SbApvUeHkWeHKEb1NvOzFCH55gKasGKftXKy5s67Ot8UpjKwnIXsoX4qbdJtV+9om2tncUUrgJcdhtqYYvJ+kY01QbIiV0/Wt6j1NEk6Bj8sdKrQACNnZfFk7o/MopZB0wDgE/c/KSfP+EgyCo20hExzDcVCLWVik9GKaUJPEw0+UjG7vDHGHwRqARiXS0so/oqaclBtgEYtpWqgRADKwQdDksqyD3i0e+PQoMhKDFo9TrW2fgehNkdQ56E0Jnaf3mR0bS6DmtA2uWKyWVd6xl+nZT1HmL42LRNIfXJCfSFTPQhsChmGT98CwNf6pGhs9QRfrdTU6g1 Generated-by-Nova
+
+# Create group1_VM2, group1_VM3, group1_VM4, and group1_VM5 instances with known floating IPs
+  - name: launch group1_VM2 (k8s master)
+    openstack.cloud.server:
+      state: present
+      cloud: openstack
+      name: group1_VM2
+      availability_zone: nova
+      image: CC-Ubuntu20.04
+      key_name: DawsonChameleon
+      timeout: 1000
+      flavor: m1.large
+      network: CH-819381-net
+      floating_ips:
+        - 129.114.25.77
+      security_groups:
+        - 667273fd-a67a-4ca2-8a68-3088220e6374 #default
+        - 7e09e9fd-4971-49bb-bd55-9aa2fa149b16 #default
+        - ENABLE_SSH
+        - ENABLE_KAFKA_COUCHDB
+        - ENABLE_K8S
+        - ENABLE_HTTP_HTTPS
+        - ENABLE_ZMQ_APPS
+
+  # - name: launch group1_VM3 (k8s worker)
+  #   openstack.cloud.server:
+  #     state: present
+  #     cloud: openstack
+  #     name: group1_VM3
+  #     availability_zone: nova
+  #     image: CC-Ubuntu20.04
+  #     key_name: test
+  #     timeout: 1000
+  #     flavor: m1.large
+  #     network: CH-819381-net
+  #     floating_ips:
+  #       - 129.114.25.5
+  #     security_groups:
+  #       - 667273fd-a67a-4ca2-8a68-3088220e6374 #default
+  #       - 7e09e9fd-4971-49bb-bd55-9aa2fa149b16 #default
+  #       - ENABLE_SSH
+  #       - ENABLE_KAFKA_COUCHDB
+  #       - ENABLE_K8S
+  #       - ENABLE_HTTP_HTTPS
+  #       - ENABLE_ZMQ_APPS
+
+
+  - name: launch group1_VM4 (k8s worker)
+    openstack.cloud.server:
+      state: present
+      cloud: openstack
+      name: group1_VM4
+      availability_zone: nova
+      image: CC-Ubuntu20.04
+      key_name: DawsonChameleon
+      timeout: 1000
+      flavor: m1.large
+      network: CH-819381-net
+      floating_ips:
+        - 129.114.26.85
+      security_groups:
+        - 667273fd-a67a-4ca2-8a68-3088220e6374 #default
+        - 7e09e9fd-4971-49bb-bd55-9aa2fa149b16 #default
+        - ENABLE_SSH
+        - ENABLE_KAFKA_COUCHDB
+        - ENABLE_K8S
+        - ENABLE_HTTP_HTTPS
+        - ENABLE_ZMQ_APPS
+
+  - name: launch group1_VM5 (k8s worker)
+    openstack.cloud.server:
+      state: present
+      cloud: openstack
+      name: group1_VM5
+      availability_zone: nova
+      image: CC-Ubuntu20.04
+      key_name: DawsonChameleon
+      timeout: 1000
+      flavor: m1.large
+      network: CH-819381-net
+      floating_ips:
+        - 129.114.25.68
+      security_groups:
+        - 667273fd-a67a-4ca2-8a68-3088220e6374 #default
+        - 7e09e9fd-4971-49bb-bd55-9aa2fa149b16 #default
+        - ENABLE_SSH
+        - ENABLE_KAFKA_COUCHDB
+        - ENABLE_K8S
+        - ENABLE_HTTP_HTTPS
+        - ENABLE_ZMQ_APPS
+  
+  - name: Pause after creating VMs
+    pause:
+      seconds: 120
+
+...

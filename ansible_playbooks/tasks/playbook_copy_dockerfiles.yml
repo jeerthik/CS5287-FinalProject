@@ -1,0 +1,15 @@
+---
+# copy docker files to VM2
+- hosts: ChameleonVM2
+  remote_user: cc
+  gather_facts: no
+  collections:
+    - openstack.cloud
+  tasks:
+  - name: copy docker and pod files to VM2
+    copy:
+      src: /home/vagrant/VagrantAnsibleFiles/FinalProject/dockerfiles
+      dest: /home/cc
+
+
+...

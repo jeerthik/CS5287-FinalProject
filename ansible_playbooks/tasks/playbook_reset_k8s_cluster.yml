@@ -1,0 +1,19 @@
+---
+
+# This playbook reset kubeadm and deletes necessary logs/file for a cluster restart
+
+- hosts: MyChameleonVMs
+  remote_user: cc
+  collections: 
+    - openstack.cloud
+  tasks:
+  - name: reset kubeadm
+    become: yes
+    ansible.builtin.command: kubeadm reset --force
+  - name: delete kube logs/files (1)
+    ansible.builtin.command: rm -rf ~/.kube
+  - name: delete kube logs/files (2)
+    become: yes
+    ansible.builtin.command: rm -rf /etc/cni/net.d
+
+...

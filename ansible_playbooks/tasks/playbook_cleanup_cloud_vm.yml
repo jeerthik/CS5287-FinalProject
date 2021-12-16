@@ -1,0 +1,72 @@
+---
+# CS 5287: Principles of Cloud Computing
+# Group 1: Jeerthi Kannan, Dawson Lee, Rooney Gao
+# This playbook detaches floating IPs from our four instances on the Chameleon Cloud and deletes the instances
+#
+
+- name: dissociate floating IPs and delete instances
+  hosts: MyLocalVMs
+  remote_user: vagrant
+  collections:
+    - openstack.cloud
+  tasks:
+
+  # Detach floating IP addresses from instances
+    - name: detach floating IP from VM2
+      openstack.cloud.floating_ip:
+        cloud: openstack
+        state: absent
+        floating_ip_address: 129.114.25.77
+        network: CH-819381-net
+        server: group1_VM2
+
+    # - name: detach floating IP from VM3
+    #   openstack.cloud.floating_ip:
+    #     cloud: openstack
+    #     state: absent
+    #     floating_ip_address: 129.114.25.5
+    #     network: CH-819381-net
+    #     server: group1_VM3
+
+    - name: detach floating IP from VM4
+      openstack.cloud.floating_ip:
+        cloud: openstack
+        state: absent
+        floating_ip_address: 129.114.26.85
+        network: CH-819381-net
+        server: group1_VM4
+
+    - name: detach floating IP from VM5
+      openstack.cloud.floating_ip:
+        cloud: openstack
+        state: absent
+        floating_ip_address: 129.114.25.5
+        network: CH-819381-net
+        server: group1_VM5
+  
+  # Delete instances
+    - name: delete group1_VM2
+      openstack.cloud.server:
+        name: group1_VM2
+        network: CH-819381-net
+        state: absent
+
+    # - name: delete group1_VM3
+    #   openstack.cloud.server:
+    #     name: group1_VM3
+    #     network: CH-819381-net
+    #     state: absent
+
+    - name: delete group1_VM4
+      openstack.cloud.server:
+        name: group1_VM4
+        network: CH-819381-net
+        state: absent
+
+    - name: delete group1_VM5
+      openstack.cloud.server:
+        name: group1_VM5
+        network: CH-819381-net
+        state: absent
+
+...

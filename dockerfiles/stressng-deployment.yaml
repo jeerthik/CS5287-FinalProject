@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: stressng-deployment
+spec:
+  # replicas: 3 # maybe we can change this and see if k8s behaves differently
+  selector:
+    matchLabels:
+      app: stressng
+  minReadySeconds: 5
+
+  template:
+    metadata:
+      labels:
+        app: stressng
+    spec:
+      containers:
+      - name: stressng
+        image: 129.114.25.77:5000/stress-ng:latest
+
+
+
+
+  
+  

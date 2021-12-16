@@ -1,0 +1,19 @@
+---
+
+# This playbook copies the host alias file that VM2 (K8S master) needs
+
+- hosts: ChameleonVM2
+  remote_user: cc
+  gather_facts: no
+  collections:
+    - openstack.cloud
+  tasks:
+  - name: copy hosts file for VM2 to /etc/hosts
+    become: yes
+    copy:
+      src: /home/vagrant/VagrantAnsibleFiles/FinalProject/VM2_hosts
+      dest: /etc/hosts
+  - name: Change permissions of hosts file
+    become: yes
+    ansible.builtin.command: chmod 640 /etc/hosts
+...

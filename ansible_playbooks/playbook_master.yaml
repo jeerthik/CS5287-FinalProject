@@ -1,0 +1,28 @@
+---
+#
+# EECS 4287/5287: Principles of Cloud Computing
+# Master playbook for Final Project
+#
+
+#####################################################
+### Play 1: Copy Files to Cloud VMs
+#
+#####################################################
+- import_playbook: tasks/playbook_copy_hosts_VM2.yml
+# - import_playbook: tasks/playbook_copy_hosts_VM3.yml
+- import_playbook: tasks/playbook_copy_hosts_VM4.yml
+- import_playbook: tasks/playbook_copy_hosts_VM5.yml
+- import_playbook: tasks/playbook_copy_dockerfiles.yml
+#####################################################
+### Play 2: Run K8s cluster and join workers
+#
+#####################################################
+- import_playbook: tasks/playbook_run_k8s.yaml
+- import_playbook: tasks/playbook_join_workers_to_k8s_cluster.yaml
+#####################################################
+### Play 3: Automate K8s pods which will deploy our 
+# microservices
+#
+#####################################################
+- import_playbook: tasks/playbook_automate_pods.yaml
+...

@@ -1,0 +1,14 @@
+# Dockerfile to build image for containerized pyzmq server
+FROM ubuntu:latest
+
+# install pyzmq and necessary packages for linux
+RUN apt-get -y update && apt-get install -y net-tools python3 gcc
+RUN apt-get install -y python3-dev python3-pip
+RUN python3 -m pip install --upgrade pip
+RUN pip3 install --upgrade pyzmq
+RUN pip3 install --upgrade couchdb
+
+# copy pyzmq-server.py file into container image
+COPY pyzmq-server.py /
+
+#CMD /bin/bash

@@ -1,0 +1,64 @@
+---
+# Tasks to Run K8S Cluster
+- hosts: ChameleonVM2
+  remote_user: cc
+  gather_facts: no
+  collections:
+    - openstack.cloud
+  tasks:
+  - name: add docker group
+    become: yes
+    ignore_errors: yes
+    ansible.builtin.command: groupadd docker
+  - name: add user to docker group
+    become: yes
+    ignore_errors: yes
+    ansible.builtin.command: usermod -aG docker ${USER}
+    
+  - name: disable swap for K8S
+    become: yes
+    ansible.builtin.command: swapoff -a
+
+# reload and restart daemon and docker
+  - name: daemon reload
+    become: yes
+    ansible.builtin.command: systemctl daemon-reload
+  - name: restart docker
+    become: yes
+    ansible.builtin.command: systemctl restart docker
+
+# Now, we need to initialize the cluster, add the worker, taint the master, etc.
+
+# initialize cluster and perform subsequent steps
+  - name: Initialize K8S cluster
+    become: yes
+    command: kubeadm init --node-name kubemaster --pod-network-cidr=10.244.0.0/16
+  
+  - name: Make .kube directory
+    command: mkdir -p /home/cc/.kube
+
+  - name: Execute Pre-requisite Steps
+    become: yes
+    shell: "{{ item }}"
+    with_items:
+      - cp -i /etc/kubernetes/admin.conf /home/cc/.kube/config
+      - chown cc:cc /home/cc/.kube/config
+
+# add flannel overlay network
+  - name: Add Flannel-Based Overlay Network
+    become: false
+    command: kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
+    async: 30
+    poll: 0
+    
+# add VM3 as a worker on VM3 run join command
+  - name: Generate join command
+    command: kubeadm token create --print-join-command
+    register: join_command
+
+  - name: Copy join command to local file
+    local_action: copy content="{{ join_command.stdout_lines[0] }}" dest="/home/vagrant/VagrantAnsibleFiles/FinalProject/join-command"
+
+# need to run the join command on the worker vm's using playbook_join_workers_to_k8s_cluster.yaml
+
+...

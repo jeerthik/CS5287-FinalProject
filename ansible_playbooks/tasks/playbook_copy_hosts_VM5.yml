@@ -1,0 +1,19 @@
+---
+
+# This playbook copies the host alias file that VM5 (K8S worker 3) needs
+
+- hosts: ChameleonVM5
+  remote_user: cc
+  gather_facts: no
+  collections:
+    - openstack.cloud
+  tasks:
+  - name: copy hosts file for VM5 to /etc/hosts
+    become: yes
+    copy:
+      src: /home/vagrant/VagrantAnsibleFiles/FinalProject/VM5_hosts
+      dest: /etc/hosts
+  - name: Change permissions of hosts file
+    become: yes
+    ansible.builtin.command: chmod 640 /etc/hosts
+...
