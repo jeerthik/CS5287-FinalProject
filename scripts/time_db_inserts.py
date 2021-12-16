@@ -3,17 +3,6 @@ import time
 import asyncio
 import argparse
 
-# couch = couchdb.Server('http://admin:admin@129.114.25.5:30001/')
-
-# if "energy" in couch:
-#     db = couch['energy']
-# else:
-#     db = couch.create('energy')
-
-# all_test_data = [
-#     [{"json_id": i * 10, "val": i * 10} for i in range(10)] for _ in range(30)
-# ]
-
 def parseCmdLineArgs():
     parser = argparse.ArgumentParser()
     
@@ -40,10 +29,7 @@ def save_to_db(all_test_data):
         doc_id, doc_rev = db.save(json_entry)
         
         count += 1
-    
 
-# async def invoke_save_to_db(all_test_data):
-#     await save_to_db(all_test_data)
 
 
 if __name__ == "__main__":
@@ -75,8 +61,6 @@ if __name__ == "__main__":
         insert_times.append(elapsed)
 
     print(insert_times)
-    # convert list of times to a string
-    # insert_times_str = ''.join(map(str, insert_times))
     # write the results to our file
     for i in range(len(insert_times)):
         results_file.write(f"Iteration {i}: {str(insert_times[i])}" + "\n")
