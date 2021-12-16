@@ -17,5 +17,5 @@ For the final project, we ran containerized CouchDB and ZeroMQ microservices in 
 3. Step 2 triggers the execution of the `playbook_master.yaml` file which runs its child Ansible playbooks (IaC) to create our K8s cluster and deploy our pods which hold containerized ZeroMQ and CouchDB microservices
 4. The CouchDB microservice, once it reaches the running state, will enable a web-interface reachable using the floating ip address and port number of the machine in which its container is running
 5. The ZeroMQ server microservice executes a python script in the `scripts` subdirectory called `pyzmq-server.py`, which continuously accepts incoming messages via a request-reply pattern
-6. Finally, we execute `pyzmq-client-2.py` and `time_db_inserts.py` in the `scripts` folder to test read latency via ZeroMQ and write latency via direct client connection to CouchDB, respectively
+6. Finally, we execute `pyzmq-client-new.py` and `time_db_inserts.py` in the `scripts` folder to test read latency via ZeroMQ and write latency via direct client connection to CouchDB, respectively
 7. Our python scripts print results and write results files, which are stored in the `results` folder
